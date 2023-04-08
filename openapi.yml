@@ -1,0 +1,122 @@
+openapi: 3.1.0
+info:
+  title: FirstQuadrant API
+  description: The FirstQuadrant API is used to interact with FirstQuadrant programmatically. We also have SDKs available (coming soon).
+  termsOfService: https://firstquadrant.ai/terms
+  contact:
+    email: inquiry@firstquadrant.ai
+  version: 0.0.0
+externalDocs:
+  description: FirstQuadrant API documentation
+  url: https://docs.firstquadrant.ai
+servers:
+  - url: https://api.firstquadrant.ai
+tags:
+  - name: teams
+    description: Operations about your team
+  - name: incoming-webhooks
+    description: Inform FirstQuadrant about events using incoming webhooks
+paths:
+  /teams/me:
+    get:
+      tags:
+        - teams
+      summary: Get team
+      description: Get the team associated with the API key.
+      responses:
+        "200":
+          description: Team object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Team"
+      security:
+        - api_key:
+            - write:team
+            - read:team
+  /incoming-webhooks/mark-conversations-as-won:
+    post:
+      tags:
+        - incoming-webhooks
+      summary: Mark conversations as won
+      description: Mark any open conversations with a particular lead as "Won" as a custom goal.
+      requestBody:
+        description: Find conversations using the given email address and create unique goal events based on the idempotency key.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MarkConversationAsWonBody"
+        required: true
+      responses:
+        "200":
+          description: Successfully queued operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Success"
+      security:
+        - api_key:
+            - write:team
+            - read:team
+components:
+  schemas:
+    MarkConversationAsWonBody:
+      required:
+        - email
+        - idempotencyKey
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        idempotencyKey:
+          type: string
+          example: aac843f5-69ab-4f88-9afb-0ed33a383ee4
+    Success:
+      required:
+        - success
+      type: object
+      properties:
+        success:
+          type: boolean
+          enum: [true]
+          example: true
+    Team:
+      required:
+        - id
+        - name
+        - createdAt
+        - updatedAt
+        - timeZone
+      type: object
+      properties:
+        id:
+          type: string
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+        name:
+          type: string
+          example: My Team
+        createdAt:
+          type: string
+          format: date-time
+          example: "2022-29-12T00:00:00.000Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2022-29-12T00:00:00.000Z"
+        timeZone:
+          type: string
+          example: America/Los_Angeles
+  requestBodies:
+    MarkConversationAsWonBody:
+      description: Success response
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MarkConversationAsWonBody"
+  securitySchemes:
+    api_key:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: You can generate an API key by logging in to your FirstQuadrant account and navigating to Settings -> Apps and enabling "FirstQuadrant API". The API key should begin with "fqa_".
