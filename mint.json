@@ -34,7 +34,7 @@
     },
     {
       "group": "API reference",
-      "pages": ["api/teams/conversations/won"]
+      "pages": ["api/teams/me", "api/teams/conversations/post-won"]
     }
   ],
   "footerSocials": {
