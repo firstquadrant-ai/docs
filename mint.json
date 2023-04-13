@@ -19,7 +19,7 @@
     {
       "name": "API reference",
       "icon": "rectangle-terminal",
-      "url": "api"
+      "url": "api-reference"
     },
     {
       "name": "Status",
@@ -33,8 +33,12 @@
       "pages": ["introduction", "authentication"]
     },
     {
-      "group": "API reference",
-      "pages": ["api/teams/me", "api/teams/conversations/post-won"]
+      "group": "Teams",
+      "pages": ["api-reference/teams/get-me", "api-reference/teams/get"]
+    },
+    {
+      "group": "Conversations",
+      "pages": ["api-reference/teams/conversations/post-won"]
     }
   ],
   "footerSocials": {

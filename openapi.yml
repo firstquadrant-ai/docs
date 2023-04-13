@@ -21,8 +21,30 @@ paths:
     get:
       tags:
         - teams
-      summary: Get team
       description: Get the team associated with the API key.
+      responses:
+        "200":
+          description: Team object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Team"
+      security:
+        - api_key:
+            - write:team
+            - read:team
+  /teams/{teamId}:
+    get:
+      tags:
+        - teams
+      description: Get the team associated with the API key.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID
       responses:
         "200":
           description: Team object
@@ -38,8 +60,14 @@ paths:
     post:
       tags:
         - conversations
-      summary: Mark conversations as won
       description: Mark any open conversations with a particular lead as "Won" as a custom goal.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID
       requestBody:
         description: Find conversations using the given email address and create unique goal events based on the idempotency key.
         content:
