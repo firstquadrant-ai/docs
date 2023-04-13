@@ -14,7 +14,7 @@ servers:
 tags:
   - name: teams
     description: Operations about your team
-  - name: incoming-webhooks
+  - name: conversations
     description: Inform FirstQuadrant about events using incoming webhooks
 paths:
   /teams/me:
@@ -34,10 +34,10 @@ paths:
         - api_key:
             - write:team
             - read:team
-  /incoming-webhooks/mark-conversations-as-won:
+  /teams/{teamId}/conversations/won:
     post:
       tags:
-        - incoming-webhooks
+        - conversations
       summary: Mark conversations as won
       description: Mark any open conversations with a particular lead as "Won" as a custom goal.
       requestBody:
