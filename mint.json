@@ -34,7 +34,11 @@
     },
     {
       "group": "Teams",
-      "pages": ["api-reference/teams/get-me", "api-reference/teams/get"]
+      "pages": [
+        "api-reference/teams/get-me",
+        "api-reference/teams/get",
+        "api-reference/teams/patch"
+      ]
     },
     {
       "group": "Conversations",

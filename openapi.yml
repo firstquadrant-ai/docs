@@ -31,20 +31,48 @@ paths:
                 $ref: "#/components/schemas/Team"
       security:
         - api_key:
-            - write:team
             - read:team
   /teams/{teamId}:
     get:
       tags:
         - teams
-      description: Get the team associated with the API key.
+      description: Get a team by ID.
       parameters:
         - in: path
           name: teamId
           schema:
             type: string
           required: true
-          description: Team ID
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+      responses:
+        "200":
+          description: Team object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Team"
+      security:
+        - api_key:
+            - read:team
+    patch:
+      tags:
+        - teams
+      description: Update a team by ID.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTeamBody"
+        required: true
       responses:
         "200":
           description: Team object
@@ -55,7 +83,6 @@ paths:
       security:
         - api_key:
             - write:team
-            - read:team
   /teams/{teamId}/conversations/won:
     post:
       tags:
@@ -67,7 +94,8 @@ paths:
           schema:
             type: string
           required: true
-          description: Team ID
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
       requestBody:
         description: Find conversations using the given email address and create unique goal events based on the idempotency key.
         content:
@@ -85,7 +113,6 @@ paths:
       security:
         - api_key:
             - write:team
-            - read:team
 components:
   schemas:
     MarkConversationAsWonBody:
@@ -97,9 +124,11 @@ components:
         email:
           type: string
           example: user@example.com
+          description: The email address of the lead.
         idempotencyKey:
           type: string
           example: aac843f5-69ab-4f88-9afb-0ed33a383ee4
+          description: A unique identifier for the goal. For example, if you are marking a conversation as won because a meeting is scheduled, use the meeting ID; or if you are marking a conversation as won because a user signed up, use your user ID.
     Success:
       required:
         - success
@@ -107,41 +136,107 @@ components:
       properties:
         success:
           type: boolean
-          enum: [true]
           example: true
     Team:
       required:
         - id
+        - cursor
         - name
         - createdAt
         - updatedAt
         - timeZone
+        - followUpStrategy
+        - followUpIntervalDays
+        - followUpMaxCount
       type: object
       properties:
         id:
           type: string
           example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+          description: The unique ID of the team, starting with `tea_`.
+        cursor:
+          type: integer
+          example: 1
+          description: The pagination cursor of the team.
         name:
           type: string
           example: My Team
+          description: The name of the team.
         createdAt:
           type: string
           format: date-time
-          example: "2022-29-12T00:00:00.000Z"
+          example: 2022-29-12T00:00:00.000Z
+          description: The date and time the team was created.
         updatedAt:
           type: string
           format: date-time
-          example: "2022-29-12T00:00:00.000Z"
+          example: 2022-29-12T00:00:00.000Z
+          description: The date and time the team was last updated.
+        deletedAt:
+          type: string
+          format: date-time
+          example: 2022-29-12T00:00:00.000Z
+          description: The date and time the team was deleted, available only if the team is deleted.
         timeZone:
           type: string
           example: America/Los_Angeles
+          description: The default timezone of the team.
+        stripeCustomerIdentifier:
+          type: string
+          example: cus_NS6PU15OHxLZUW
+          description: The Stripe customer identifier, available only if the team has a subscription.
+        stripeSubscriptionIdentifier:
+          type: string
+          example: sub_1MhF5tHHGwPWDScpd7i4KLIi
+          description: The Stripe subscription identifier, available only if the team has a subscription.
+        followUpStrategy:
+          type: string
+          example: FIBONACCI
+          enum: [EXPONENTIAL, FIBONACCI, LINEAR]
+          description: The follow up strategy for the team.
+        followUpIntervalDays:
+          type: integer
+          example: 3
+          description: The minimum number of days to wait before following up.
+        followUpMaxCount:
+          type: integer
+          example: 6
+          description: The maximum number of follow ups to send.
+    UpdateTeamBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: My Team
+          description: The name of the team.
+        timeZone:
+          type: string
+          example: America/Los_Angeles
+          description: The default timezone of the team.
+        followUpStrategy:
+          type: string
+          example: FIBONACCI
+          enum: [EXPONENTIAL, FIBONACCI, LINEAR]
+          description: The follow up strategy for the team.
+        followUpIntervalDays:
+          type: integer
+          example: 3
+          description: The minimum number of days to wait before following up.
+        followUpMaxCount:
+          type: integer
+          example: 6
+          description: The maximum number of follow ups to send.
   requestBodies:
     MarkConversationAsWonBody:
-      description: Success response
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/MarkConversationAsWonBody"
+    UpdateTeamBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UpdateTeamBody"
   securitySchemes:
     api_key:
       type: apiKey
