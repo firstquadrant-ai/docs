@@ -7,9 +7,9 @@
   },
   "favicon": "/favicon.png",
   "colors": {
-    "primary": "#0069ED",
-    "light": "#4D9CFF",
-    "dark": "#0050B4"
+    "primary": "#5F00ED",
+    "light": "#7921fc",
+    "dark": "#5F00ED"
   },
   "topbarCtaButton": {
     "name": "Get Started",
@@ -30,7 +30,15 @@
   "navigation": [
     {
       "group": "Documentation",
-      "pages": ["introduction", "authentication"]
+      "pages": ["introduction"]
+    },
+    {
+      "group": "Audiences",
+      "pages": ["audiences/find-leads", "audiences/import-csv"]
+    },
+    {
+      "group": "API",
+      "pages": ["api-reference/authentication", "api-reference/sdks"]
     },
     {
       "group": "Teams",
@@ -58,5 +66,9 @@
     "posthog": {
       "apiKey": "phc_B84UAr8y0qBSjRDX9KmX7UPFG3jIb6iCe9mmUqiQbt7"
     }
+  },
+  "modeToggle": {
+    "default": "dark",
+    "isHidden": true
   }
 }

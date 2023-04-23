@@ -1,0 +1,48 @@
+---
+title: Import CSVs
+description: Import an existing audience using CSVs
+---
+
+To import an existing audience, for example from your CRM, you can use a CSV (comma-separated values) file. The first row of the file should include the header "Email":
+
+| Email              |
+| ------------------ |
+| `jane@example.com` |
+| `john@example.com` |
+
+Once you've uploaded your CSV file, you'll see its import progress. The import will continue in the background, so you can close this page and come back to it later if you have a large list of leads.
+
+## Additional columns
+
+<Info>
+  Additional columns in CSV imports is currently in preview; please get in touch
+  with us to enable this feature for your account.
+</Info>
+
+You can optionally include several other columns in your CSV. You can leave any of these optional values empty, but not "Email":
+
+| Email              | Lead Name | Lead Timezone       |
+| ------------------ | --------- | ------------------- |
+| `jane@example.com` | Jane Doe  | America/Los_Angeles |
+| `john@example.com` | John Doe  |
+
+### Available optional columns
+
+| Header              | Description                             | Example              |
+| ------------------- | --------------------------------------- | -------------------- |
+| Lead Name           | Full name of the lead                   | `Jane Doe`           |
+| Lead Timezone       | IATA timezone identifier                | `Asia/Kolkata`       |
+| Lead LinkedIn ID    | LinkedIn profile identifier             | `/in/janedoe`        |
+| Lead Apollo ID      | Apollo record identifier                | `21921983`           |
+| Account Domain      | Domain name associated with the account | `example.com`        |
+| Account LinkedIn ID | LinkedIn profile identifier             | `/in/janedoe`        |
+| Account Apollo ID   | Apollo record identifier                | `21921983`           |
+| Metadata            | JSON object with any key-value data     | `{ "crm_id": 5379 }` |
+
+## Import status
+
+Each lead would be added to your audience only if FirstQuadrant is able to enrich the lead. If you have enabled "Exclude audiences", leads that are already in another audience will not be added again. The status of each row in your CSV will be one of the following.
+
+- **Successful**: This lead was successfully enriched and added to your audience
+- **Skipped**: This lead was skipped because it already exists in another audience
+- **Failure**: We were unable to enrich this lead, so it was not added to your audience
