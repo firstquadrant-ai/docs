@@ -37,6 +37,14 @@
       "pages": ["audiences/find-leads", "audiences/import-csv"]
     },
     {
+      "group": "Mailboxes",
+      "pages": [
+        "mailboxes/connect",
+        "mailboxes/email-warming",
+        "mailboxes/reputation-score"
+      ]
+    },
+    {
       "group": "API",
       "pages": ["api-reference/authentication", "api-reference/sdks"]
     },
