@@ -45,6 +45,10 @@
       ]
     },
     {
+      "group": "Settings",
+      "pages": ["settings/providing-feedback", "settings/feature-preview"]
+    },
+    {
       "group": "API",
       "pages": ["api-reference/authentication", "api-reference/sdks"]
     },
