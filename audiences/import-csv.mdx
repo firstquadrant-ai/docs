@@ -14,30 +14,24 @@ Once you've uploaded your CSV file, you'll see its import progress. The import w
 
 ## Additional columns
 
-<Info>
-  Additional columns in CSV imports is currently in preview; please get in touch
-  with us to enable this feature for your account.
-</Info>
-
 You can optionally include several other columns in your CSV. You can leave any of these optional values empty, but not "Email":
 
-| Email              | Lead Name | Lead Timezone       |
-| ------------------ | --------- | ------------------- |
-| `jane@example.com` | Jane Doe  | America/Los_Angeles |
-| `john@example.com` | John Doe  |
+| Email              | Person Name | Person Time Zone    |
+| ------------------ | ----------- | ------------------- |
+| `jane@example.com` | Jane Doe    | America/Los_Angeles |
+| `john@example.com` | John Doe    |
 
 ### Available optional columns
 
-| Header              | Description                             | Example              |
-| ------------------- | --------------------------------------- | -------------------- |
-| Lead Name           | Full name of the lead                   | `Jane Doe`           |
-| Lead Timezone       | IATA timezone identifier                | `Asia/Kolkata`       |
-| Lead LinkedIn ID    | LinkedIn profile identifier             | `/in/janedoe`        |
-| Lead Apollo ID      | Apollo record identifier                | `21921983`           |
-| Account Domain      | Domain name associated with the account | `example.com`        |
-| Account LinkedIn ID | LinkedIn profile identifier             | `/in/janedoe`        |
-| Account Apollo ID   | Apollo record identifier                | `21921983`           |
-| Metadata            | JSON object with any key-value data     | `{ "crm_id": 5379 }` |
+| Header                   | Description                                  | Example         |
+| ------------------------ | -------------------------------------------- | --------------- |
+| Person Name              | Full name of the lead                        | `Jane Doe`      |
+| Person Headline          | Headline of the lead                         | `CTO of Pabio`  |
+| Person Time Zone         | IATA timezone identifier                     | `Asia/Kolkata`  |
+| Organization Name        | Name of the organization                     | `Pabio`         |
+| Organization Description | Paragraph of description of the organization | `Pabio is a...` |
+
+Each additional column can be up to 2,000 characters long.
 
 ## Import status
 
