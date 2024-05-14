@@ -3,9 +3,9 @@ title: Import CSVs
 description: Import an existing audience using CSVs
 ---
 
-To import an existing audience, for example from your CRM, you can use a CSV (comma-separated values) file. The first row of the file should include the header "Email":
+To import an existing audience, for example from your CRM, you can use a CSV (comma-separated values) file. The first row of the file should include at least the header **Contact Email**:
 
-| Email              |
+| Contact Email      |
 | ------------------ |
 | `jane@example.com` |
 | `john@example.com` |
@@ -14,24 +14,77 @@ Once you've uploaded your CSV file, you'll see its import progress. The import w
 
 ## Additional columns
 
-You can optionally include several other columns in your CSV. You can leave any of these optional values empty, but not "Email":
+You can optionally include several other columns in your CSV. You can leave any of these optional values empty, but not **Contact Email**:
 
-| Email              | Person Name | Person Time Zone    |
-| ------------------ | ----------- | ------------------- |
-| `jane@example.com` | Jane Doe    | America/Los_Angeles |
-| `john@example.com` | John Doe    |
+| Contact Email      | Contact Name | Contact Time Zone   |
+| ------------------ | ------------ | ------------------- |
+| `jane@example.com` | Jane Doe     | America/Los_Angeles |
+| `john@example.com` | John Doe     |
 
 ### Available optional columns
 
-| Header                   | Description                                  | Example         |
-| ------------------------ | -------------------------------------------- | --------------- |
-| Person Name              | Full name of the lead                        | `Jane Doe`      |
-| Person Headline          | Headline of the lead                         | `CTO of Pabio`  |
-| Person Time Zone         | IATA timezone identifier                     | `Asia/Kolkata`  |
-| Organization Name        | Name of the organization                     | `Pabio`         |
-| Organization Description | Paragraph of description of the organization | `Pabio is a...` |
+| Header                                 | Description                                                                             |
+| -------------------------------------- | --------------------------------------------------------------------------------------- |
+| Contact Email                          | Email address of the contact                                                            |
+| Contact Hashed Email                   | MD5 hash of the contact's email address                                                 |
+| Contact First Name                     | First name of the contact                                                               |
+| Contact Last Name                      | Last name of the contact                                                                |
+| Contact Name                           | Full name of the contact                                                                |
+| Contact Phone                          | Phone number of the contact                                                             |
+| Contact Apollo ID                      | Person ID exported from Apollo.io                                                       |
+| Contact LinkedIn URL                   | LinkedIn personal profile URL                                                           |
+| Contact Bio                            | Short description, e.g., biography from social media profiles                           |
+| Contact Avatar URL                     | URL of a profile picture for the contact                                                |
+| Contact Website URL                    | URL of the personal website of the contact                                              |
+| Contact Location                       | Personal home address of the contact, e.g., city                                        |
+| Contact Time Zone                      | IATA time zone identifier of the location of the contact                                |
+| Contact City                           | Name of the city where the contact lives                                                |
+| Contact State                          | Name of the state where the contact lives                                               |
+| Contact Country Code                   | ISO 3166-1 alpha-2 two-letter country codes for where the contact lives                 |
+| Contact Latitude                       | Latitude of the geographic position for where the contact lives                         |
+| Contact Longitude                      | Longitude of the geographic position for where the contact lives                        |
+| Contact Employment Title               | Current job title of the contact                                                        |
+| Contact Employment Seniority           | Current management position of the contact, can be one of the below options             |
+| Contact Twitter URL                    | URL of the X/Twitter profile of the contact                                             |
+| Contact Facebook URL                   | URL of the Facebook profile of the contact                                              |
+| Contact GitHub URL                     | URL of the GitHub account of the contact                                                |
+| Contact Company Name                   | Name of the company                                                                     |
+| Contact Company Domain                 | Domain name of the company                                                              |
+| Contact Company Nickname               | Nickname of the company without suffixes like Inc. or LLC                               |
+| Contact Company Bio                    | One paragraph description of the company                                                |
+| Contact Company Avatar URL             | URL of a profile picture for the company                                                |
+| Contact Company Website URL            | URL of the website of the company                                                       |
+| Contact Company Street                 | Street name part of the headquarters address of the company                             |
+| Contact Company City                   | Name of the city where the headquarters of the company is                               |
+| Contact Company State                  | Name of the state where the headquarters of the company is                              |
+| Contact Company Postal Code            | Postal code for where the headquarters of the company is                                |
+| Contact Company Country                | ISO 3166-1 alpha-2 two-letter country codes for where the headquarter of the company is |
+| Contact Company Raw Address            | Raw, formatted, complete address of the headquarters of the company                     |
+| Contact Company Founded Year           | Year the company was founded                                                            |
+| Contact Company Employees Count        | Estimated number of employees that currently work at the company                        |
+| Contact Company Alexa Global Rank      | Website rank of the company provided by Alexa                                           |
+| Contact Company Retail Locations Count | Estimated number of retail locations of the company                                     |
+| Contact Company Annual Revenue         | Estimated annual revenue of the company is US$                                          |
+| Contact Company Funding Total          | Total funding raised by the company in US$                                              |
+| Contact Company Funding Stage          | Stage of the last funding raised by the company, can be one of the below options        |
+| Contact Company Ticker                 | Public stock market ticker for the company from any exchange                            |
+| Contact Company Primary Industry       | Primary industry the company operates in                                                |
+| Contact Company Secondary Industries   | Additional industries apart from the primary that the company operates in               |
+| Contact Company Tags                   | Tags associated with the company                                                        |
+| Contact Company Languages              | Spoken languages available on the company's website                                     |
+| Contact Company Tech Stack             | Technology stack used by the company                                                    |
+| Contact Company Phone                  | Primary phone number to contact the company with country code                           |
+| Contact Company Blog URL               | URL of the company blog                                                                 |
+| Contact Company AngelList URL          | URL of the Wellfound/AngelList profile of the company                                   |
+| Contact Company LinkedIn URL           | URL of the LinkedIn company page                                                        |
+| Contact Company Twitter URL            | URL of the X/Twitter profile of the company                                             |
+| Contact Company Facebook URL           | URL of the Facebook profile of the company                                              |
+| Contact Company Crunchbase URL         | URL of the Crunchbase profile of the company                                            |
 
-Each additional column can be up to 2,000 characters long.
+Each additional column can be up to 2,000 characters long. The list of options are:
+
+- **Contact Employment Seniority**: `c_suite`, `director`, `entry`, `founder`, `head`, `intern`, `manager`, `owner`, `partner`, `senior`, `vp`
+- **Contact Company Funding Stage**: `Angel`, `Convertible Note`, `Debt Financing`, `Equity Crowdfunding`, `Other`, `Private Equity`, `Seed`, `Series A`, `Series B`, `Series C`, `Series D`, `Series E`, `Series F`, `Series G`, `Series H`, `Venture (Round not Specified)`
 
 ## Import status
 

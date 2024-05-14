@@ -33,11 +33,11 @@
   "navigation": [
     {
       "group": "Documentation",
-      "pages": ["introduction"]
+      "pages": ["introduction", "onboarding"]
     },
     {
       "group": "Audiences",
-      "pages": ["audiences/find-leads", "audiences/import-csv"]
+      "pages": ["audiences/import-csv"]
     },
     {
       "group": "Mailboxes",
