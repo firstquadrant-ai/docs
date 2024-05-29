@@ -1,0 +1,89 @@
+---
+title: Integrate
+description: Send contacts from third-party tools to FirstQuadrant.
+---
+
+You can use FirstQuadrant's integrations to send contacts from third-party tools to FirstQuadrant. This allows you to use your existing CRM, marketing automation platform, or other tools to send contacts to FirstQuadrant for further enrichment and use in your campaigns.
+
+## Supported integrations
+
+### Zapier
+
+The easiest way to integrate FirstQuadrant with third-party tools is to use [Zapier](https://zapier.com). Zapier allows you to connect FirstQuadrant with thousands of other tools, such as CRMs, marketing automation platforms, and more, without writing any code.
+
+To use Zapier, you can create an audience with the type "Integrate" and click on "Connect with Zapier" to join the beta program. Once you've joined the beta program, you can create a Zap to send contacts from your third-party tool to FirstQuadrant.
+
+### Campaign API
+
+Each campaign with the type "Integrate" also gets a campaign-specific, public-facing API endpoint that you can use to send contacts to FirstQuadrant. You can use this API endpoint to send contacts from your third-party tool to FirstQuadrant programmatically. For example, when someone signs up on your website, you can send their contact information to FirstQuadrant using the Campaign API.
+
+The API key starts with `fqa_pub_` and is unique to each campaign. You can find the API key on the Audience page of your campaign by clicking on "Review API key". Note that this API key is different from your team's API keys, which are used for authentication when using the FirstQuadrant API. The campaign-specific API key is used to send contacts to a specific campaign and can be safely shared with third-party tools or used in client-side code (note that campaign API keys include `pub_` in the key, meaning "public", whereas others do not).
+
+#### Request body
+
+The API endpoint accepts an object with the properties `contact`, `company`, and `data`. The minimum required properties is `contact.email`, but it is recommended to include `contact.name` and `company.name` if available. The following properties are supported:
+
+- `contact`: `name`, `email`, `apolloId`, `nickname`, `bio`, `avatar`, `website`, `location`, `timeZone`, `city`, `state`, `countryCode`, `latitude`, `longitude`, `employmentTitle`, `employmentSeniority`, `linkedInUrl`, `twitterUrl`, `facebookUrl`, `githubUrl`
+- `company`: `name`, `domain`, `nickname`, `bio`, `avatar`, `website`, `street`, `city`, `state`, `postalCode`, `country`, `rawAddress`, `foundedYear`, `employeesCount`, `alexaGlobalRank`, `retailLocationsCount`, `annualRevenue`, `fundingTotal`, `fundingStage`, `ticker`, `primaryIndustry`, `secondaryIndustries`, `tags`, `languages`, `techStack`, `phone`, `blogUrl`, `angelListUrl`, `linkedInUrl`, `twitterUrl`, `facebookUrl`, `crunchbaseUrl`
+- `data`: You can include any additional data in the `data` property as a key-value pair where both the key and the value is a string. This data will be stored with the contact and can be used in your campaigns.
+
+The descriptions of these properties are the same as the properties in the [Import CSV audience](./import-csv) feature.
+
+#### Authentication
+
+You need to include the API key in the `Campaign-API-Key` header. If you are unable to send custom headers, you can also include the API key in the request body as `apiKey` or as a query parameter `campaign-api-key`.
+
+#### Examples
+
+In the following examples, you can replace `CAMPAIGN_API_KEY` with the API key of your campaign. In these examples, we're sending a contact with the name "John Doe" and email john@example.com to FirstQuadrant. They have written a custom message "I want to contact sales." which is stored in the `data.message` property.
+
+You can use the following HTML form to send contacts to FirstQuadrant. Since HTML forms do not support nested objects, you can use dot notation to specify nested properties. For example, `contact.name` will be parsed as `contact: { name: "John Doe" }` when the header `Content-Type: application/x-www-form-urlencoded` is set.
+
+```html
+<form
+  action="https://firstquadrant.ai/api/go/audience?campaign-api-key=CAMPAIGN_API_KEY"
+  method="post"
+>
+  <label>Name <input name="contact.name" /></label>
+  <label>Email <input name="contact.email" type="email" /></label>
+  <label>Message <textarea name="data.message"></textarea></label>
+  <button type="submit">Submit</button>
+</form>
+```
+
+You can use the following cURL command to send contacts to FirstQuadrant:
+
+```bash
+curl \
+  -X POST \
+  -H "Campaign-API-Key: CAMPAIGN_API_KEY" \
+  -H "Content-type: application/json" \
+  -d '{
+    "contact": {
+      "name": "John Doe",
+      "email": "john@example.com"
+    },
+    "data": {
+      "message": "I want to contact sales."
+    }
+  }' 'https://firstquadrant.ai/api/go/audience'
+```
+
+You can use the following JavaScript code to send contacts to FirstQuadrant:
+
+```js
+await fetch("https://firstquadrant.ai/api/go/audience", {
+  method: "POST",
+  headers: {
+    "Campaign-API-Key": "CAMPAIGN_API_KEY",
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    contact: {
+      name: "John Doe",
+      email: "johndoe@example.com",
+    },
+    data: { message: "I want to contact sales." },
+  }),
+});
+```

@@ -1,0 +1,56 @@
+---
+title: Deliverability recommendations
+description: We recommend setting up email warming for all mailboxes to ensure optimal deliverability and reputation scores.
+---
+
+## DNS records
+
+It's extremely important to set up your DNS records correctly for your outbound-specific domains, as this is the first thing mailbox providers check when determining whether an email is spam or not. You should set up the following DNS records for each of your additional domains.
+
+### SPF
+
+The Sender Policy Framework (SPF) is a DNS record that specifies which mail servers are allowed to send email on behalf of your domain. It's recommended to use a tool to generate your SPF records or use standard ones provided by your mailbox provider. For example, if you're using Google Workspace, your SPF record will look like this:
+
+```
+v=spf1 include:_spf.google.com ~all
+```
+
+In the above example, `_spf.google.com` is a standard SPF record provided by Google Workspace, and `~all` means that if the email is not sent from one of the servers specified in the SPF record, it should be soft-failed, i.e., marked as spam but still delivered to the inbox. Other options are `-all` (hard-fail, i.e., marked as spam and not delivered to the inbox), ?all (neutral, i.e., not marked as spam), and +all (allow all servers to send email on behalf of your domain, i.e., not marked as spam). It's recommended to use `~all` or `-all` as your SPF record, and only include servers that you're using to send email.
+
+For more information, visit the [Help prevent spoofing and spam with SPF](https://support.google.com/a/answer/33786) page on Google Workspace Admin Help.
+
+### DKIM
+
+The DomainKeys Identified Mail (DKIM) is a DNS record that allows the recipient to verify that an email was sent and authorized by the owner of that domain. It's recommended to use the standard DKIM record provided by your mailbox provider. For example, if you're using Google Workspace, you can generate a DKIM record in the Google Admin console and add it to your DNS records.
+
+For more information, visit the [Help prevent spoofing and spam with DKIM](https://support.google.com/a/answer/174124) page on Google Workspace Admin Help.
+
+### DMARC
+
+The Domain-based Message Authentication, Reporting, and Conformance (DMARC) is a DNS record that specifies how mailbox providers should handle emails that fail SPF or DKIM checks. An example DMARC record is:
+
+```
+v=DMARC1; p=reject; rua=mailto:rua@example.com; ruf=mailto:ruf@example.com
+```
+
+In the above example, `p=reject` means that if an email fails SPF or DKIM checks, it should be rejected, i.e., marked as spam and not delivered to the inbox. Other options are `p=quarantine` (soft-fail, i.e., marked as spam but still delivered to the inbox) and `p=none` (no action taken, i.e., not marked as spam). It's recommended to use `p=reject` as your DMARC record to ensure that only emails sent from your authorized servers are delivered to the inbox after testing that your SPF and DKIM records are set up correctly. If you're unsure about your configuration, you can use `p=quarantine` in the beginning to ensure that emails are still delivered and then switch to `p=reject` after testing.
+
+You should also specify a rua and ruf email address to receive reports about emails that fail SPF or DKIM checks. These reports are sent by mailbox providers to the specified email address, and can be used to debug any issues with your SPF and DKIM records. It's recommended to use a separate email address for this purpose, and not your primary email address; it's easiest to use a third-party hosted service that provides this functionality.
+
+For more information, visit the [Help prevent spoofing and spam with DMARC](https://support.google.com/a/answer/2466580) page on Google Workspace Admin Help.
+
+### Other records
+
+You can additionally set up additional DNS records such as BIMI, MTA-STS, and TLS-RPT, but these are not necessary and can be set up later if you wish to. BIMI in particular is an interesting candidate, as it allows you to specify a logo that will be displayed next to your emails in the inbox, but it's not widely supported yet and can be very expensive to set up, especially for a large number of domains. In general, you should be good to go with strict DMARC using properly set SPF and DKIM records.
+
+## Email warming
+
+Email warming is the process of gradually increasing the number of emails you send and receive from a new mailbox to establish a good sender reputation with mailbox providers. This is done by sending a small number of emails at first, and then gradually increasing the number of emails sent over time, and having a percent of those emails replied to. This makes the mailbox provider believe that the emails sent are worth replying to, and are therefore not likely spam.
+
+Regardless of whether you have a completely fresh mailbox or one that's already been used in the past, **it is of paramount importance that you always continue to warm up your mailboxes** that are used for sending outbound campaigns. This is to maintain your sender reputation and ensure that your emails are delivered to the inbox, and if you have a good reputation today does not necessarily mean that you will have a good reputation tomorrow.
+
+We recommend using a provider like [MailReach](https://www.mailreach.co) or [Instantly](https://www.instantly.io) to automate the email warming process. These providers will send emails on your behalf, and reply to them automatically, to ensure that your mailboxes are warmed up properly. It's important to note that FirstQuadrant does not take care of email warming for you, and we highly recommend setting up warming as early as possible to ensure optimal deliverability and reputation scores.
+
+## Deliverability Guide
+
+For more information on how to improve your deliverability, check out our free [Deliverability Guide](https://deliverabilityguide.com), which provides a comprehensive overview of how to set up your email infrastructure for optimal deliverability.

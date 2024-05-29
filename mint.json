@@ -37,13 +37,18 @@
     },
     {
       "group": "Audiences",
-      "pages": ["audiences/import-csv"]
+      "pages": [
+        "audiences/prospect",
+        "audiences/import",
+        "audiences/integrate",
+        "audiences/qualification"
+      ]
     },
     {
       "group": "Mailboxes",
       "pages": [
         "mailboxes/connect",
-        "mailboxes/email-warming",
+        "mailboxes/deliverability-recommendations",
         "mailboxes/reputation-score"
       ]
     },
@@ -53,19 +58,30 @@
     },
     {
       "group": "API",
-      "pages": ["api-reference/authentication", "api-reference/sdks"]
+      "pages": ["api-reference/authentication"]
     },
     {
       "group": "Teams",
       "pages": [
         "api-reference/teams/get-me",
         "api-reference/teams/get",
-        "api-reference/teams/patch"
+        "api-reference/teams/patch",
+        "api-reference/teams/delete",
+        "api-reference/teams/get-outbound-settings",
+        "api-reference/teams/patch-outbound-settings"
       ]
     },
     {
-      "group": "Conversations",
-      "pages": ["api-reference/teams/conversations/post-won"]
+      "group": "Contacts",
+      "pages": [
+        "api-reference/contacts/get",
+        "api-reference/contacts/contactId/get",
+        "api-reference/contacts/contactId/patch",
+        "api-reference/contacts/contactId/delete",
+        "api-reference/contacts/contactId/block",
+        "api-reference/contacts/contactId/unblock",
+        "api-reference/contacts/contactId/get-campaign-contacts"
+      ]
     }
   ],
   "footerSocials": {

@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: FirstQuadrant API
-  description: The FirstQuadrant API is used to interact with FirstQuadrant programmatically. We also have SDKs available (coming soon).
+  description: The FirstQuadrant API is used to interact with FirstQuadrant programmatically.
   termsOfService: https://firstquadrant.ai/terms
   contact:
     email: inquiry@firstquadrant.ai
@@ -10,14 +10,14 @@ externalDocs:
   description: FirstQuadrant API documentation
   url: https://docs.firstquadrant.ai
 servers:
-  - url: https://api.firstquadrant.ai
+  - url: https://firstquadrant.ai
 tags:
   - name: teams
     description: Operations about your team
   - name: conversations
     description: Inform FirstQuadrant about events using incoming webhooks
 paths:
-  /teams/me:
+  /api/teams/me:
     get:
       tags:
         - teams
@@ -32,7 +32,7 @@ paths:
       security:
         - api_key:
             - read:team
-  /teams/{teamId}:
+  /api/teams/{teamId}:
     get:
       tags:
         - teams
@@ -83,11 +83,10 @@ paths:
       security:
         - api_key:
             - write:team
-  /teams/{teamId}/conversations/won:
-    post:
+    delete:
       tags:
-        - conversations
-      description: Mark any open conversations with a particular lead as "Won" as a custom goal.
+        - teams
+      description: Delete a team by ID.
       parameters:
         - in: path
           name: teamId
@@ -96,39 +95,310 @@ paths:
           required: true
           description: Team ID, starting with `tea_`
           example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
-      requestBody:
-        description: Find conversations using the given email address and create unique goal events based on the idempotency key.
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/MarkConversationAsWonBody"
-        required: true
       responses:
         "200":
-          description: Successfully queued operation
+          description: Team object
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Success"
+                $ref: "#/components/schemas/Team"
+      security:
+        - sudo:
+            - write:*
+  /api/teams/{teamId}/outbound:
+    get:
+      tags:
+        - teams
+      description: Get the outbound settings for a team by ID.
+      responses:
+        "200":
+          description: Outbound settings object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamOutboundSettings"
       security:
         - api_key:
-            - write:team
+            - read:team
+    patch:
+      tags:
+        - teams
+      description: Update the outbound settings for a team by ID.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTeamOutboundSettingsBody"
+        required: true
+      responses:
+        "200":
+          description: Outbound settings object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamOutboundSettings"
+      security:
+        - api_key:
+            - read:team
+  /api/teams/{teamId}/contacts:
+    get:
+      tags:
+        - teams
+      description: Get all contacts for a team.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+        - $ref: "#/components/parameters/take"
+        - $ref: "#/components/parameters/startingAfter"
+        - $ref: "#/components/parameters/q"
+        - $ref: "#/components/parameters/orderBy"
+        - $ref: "#/components/parameters/sort"
+      responses:
+        "200":
+          description: Array of contacts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Contact"
+      security:
+        - api_key:
+            - read:team
+  /api/teams/{teamId}/contacts/{contactId}:
+    get:
+      tags:
+        - teams
+      description: Get a contact by ID.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+        - in: path
+          name: contactId
+          schema:
+            type: string
+          required: true
+          description: Contact ID, starting with `con_`
+          example: con_2MSb8jd6VDptcAcVJuPcJhte3Yc
+      responses:
+        "200":
+          description: Contact object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+      security:
+        - api_key:
+            - read:team
+    patch:
+      tags:
+        - teams
+      description: Update a contact by ID.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+        - in: path
+          name: contactId
+          schema:
+            type: string
+          required: true
+          description: Contact ID, starting with `con_`
+          example: con_2MSb8jd6VDptcAcVJuPcJhte3Yc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateContactBody"
+        required: true
+      responses:
+        "200":
+          description: Contact object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+      security:
+        - api_key:
+            - read:team
+    delete:
+      tags:
+        - teams
+      description: Delete a contact by ID.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+        - in: path
+          name: contactId
+          schema:
+            type: string
+          required: true
+          description: Contact ID, starting with `con_`
+          example: con_2MSb8jd6VDptcAcVJuPcJhte3Yc
+      responses:
+        "200":
+          description: Contact object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+      security:
+        - api_key:
+            - read:team
+  /api/teams/{teamId}/contacts/{contactId}/block:
+    post:
+      tags:
+        - teams
+      description: Unsubscribe a contact by ID.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+        - in: path
+          name: contactId
+          schema:
+            type: string
+          required: true
+          description: Contact ID, starting with `con_`
+          example: con_2MSb8jd6VDptcAcVJuPcJhte3Yc
+      responses:
+        "200":
+          description: Contact object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+      security:
+        - api_key:
+            - read:team
+  /api/teams/{teamId}/contacts/{contactId}/unblock:
+    post:
+      tags:
+        - teams
+      description: Resubscribe an unsubscribed a contact by ID.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+        - in: path
+          name: contactId
+          schema:
+            type: string
+          required: true
+          description: Contact ID, starting with `con_`
+          example: con_2MSb8jd6VDptcAcVJuPcJhte3Yc
+      responses:
+        "200":
+          description: Contact object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+      security:
+        - api_key:
+            - read:team
+  /api/teams/{teamId}/contacts/{contactId}/campaign-contacts:
+    get:
+      tags:
+        - teams
+      description: Get all campaign contacts for a contacts.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+        - in: path
+          name: contactId
+          schema:
+            type: string
+          required: true
+          description: Contact ID, starting with `con_`
+          example: con_2MSb8jd6VDptcAcVJuPcJhte3Yc
+        - $ref: "#/components/parameters/take"
+        - $ref: "#/components/parameters/startingAfter"
+        - $ref: "#/components/parameters/q"
+        - $ref: "#/components/parameters/orderBy"
+        - $ref: "#/components/parameters/sort"
+      responses:
+        "200":
+          description: Array of campaign contacts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CampaignContact"
+      security:
+        - api_key:
+            - read:team
 components:
+  parameters:
+    take:
+      name: take
+      in: query
+      schema:
+        type: integer
+        default: 25
+        maximum: 100
+      description: The number of items to return per page.
+    startingAfter:
+      name: startingAfter
+      in: query
+      schema:
+        type: string
+      description: ID of the item to start the pagination after (not inclusive).
+    q:
+      name: q
+      in: query
+      schema:
+        type: string
+      description: Search query to filter items by.
+    orderBy:
+      name: orderBy
+      in: query
+      schema:
+        type: string
+      description: The field to order items by (e.g., `createdAt`).
+    sort:
+      name: sort
+      in: query
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+      description: The direction to sort items by.
   schemas:
-    MarkConversationAsWonBody:
-      required:
-        - email
-        - idempotencyKey
-      type: object
-      properties:
-        email:
-          type: string
-          example: user@example.com
-          description: The email address of the lead.
-        idempotencyKey:
-          type: string
-          example: aac843f5-69ab-4f88-9afb-0ed33a383ee4
-          description: A unique identifier for the goal. For example, if you are marking a conversation as won because a meeting is scheduled, use the meeting ID; or if you are marking a conversation as won because a user signed up, use your user ID.
     Success:
       required:
         - success
@@ -140,28 +410,16 @@ components:
     Team:
       required:
         - id
-        - cursor
-        - name
         - createdAt
         - updatedAt
-        - timeZone
-        - followUpStrategy
-        - followUpIntervalDays
-        - followUpMaxCount
+        - name
+        - slug
       type: object
       properties:
         id:
           type: string
-          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+          example: tea_qxwVhUwAj3ijxWXstmCNvIII
           description: The unique ID of the team, starting with `tea_`.
-        cursor:
-          type: integer
-          example: 1
-          description: The pagination cursor of the team.
-        name:
-          type: string
-          example: My Team
-          description: The name of the team.
         createdAt:
           type: string
           format: date-time
@@ -172,36 +430,519 @@ components:
           format: date-time
           example: 2022-29-12T00:00:00.000Z
           description: The date and time the team was last updated.
-        deletedAt:
+        name:
+          type: string
+          example: My Team
+          description: The name of the team.
+        slug:
+          type: string
+          example: my-team
+          description: The unique slug of the team used is URLs in the FirstQuadrant app, e.g., `https://firstquadrant.ai/my-team`.
+    Contact:
+      type: object
+      properties:
+        id:
+          type: string
+          example: con_qxwVhUwAj3ijxWXstmCNvIII
+          description: The unique ID of the cpmtact, starting with `con_`.
+        createdAt:
           type: string
           format: date-time
           example: 2022-29-12T00:00:00.000Z
-          description: The date and time the team was deleted, available only if the team is deleted.
+          description: The date and time the contact was created.
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2022-29-12T00:00:00.000Z
+          description: The date and time the contact was last updated.
+        blockedAt:
+          type: string
+          format: date-time
+          example: 2022-29-12T00:00:00.000Z
+          description: The date and time the contact was unsubscribed.
+        name:
+          type: string
+          example: Anand Chowdhary
+          description: The full name of the contact.
+        nickname:
+          type: string
+          example: Anand
+          description: The nickname of the contact, e.g., the first name.
+        bio:
+          type: string
+          example: Founder, CTO, CPO of FirstQuadrant. GitHub Star, Forbes 30 Under 30, Y Combinator.
+          description: The bio of the contact.
+        avatar:
+          type: string
+          example: https://firstquadrant.ai/avatar.jpg
+          description: The URL of the avatar of the contact.
+        website:
+          type: string
+          example: https://firstquadrant.ai
+          description: The URL of the personal website of the contact.
+        location:
+          type: string
+          example: San Francisco, CA, USA
+          description: The residential location of the contact.
         timeZone:
           type: string
           example: America/Los_Angeles
-          description: The default timezone of the team.
-        stripeCustomerIdentifier:
+          description: The time zone of the contact in the IANA time zone database format.
+        city:
           type: string
-          example: cus_NS6PU15OHxLZUW
-          description: The Stripe customer identifier, available only if the team has a subscription.
-        stripeSubscriptionIdentifier:
+          example: San Francisco
+          description: The city of the contact's residential location.
+        state:
           type: string
-          example: sub_1MhF5tHHGwPWDScpd7i4KLIi
-          description: The Stripe subscription identifier, available only if the team has a subscription.
+          example: California
+          description: The state of the contact's residential location.
+        countryCode:
+          type: string
+          example: US
+          description: The country code of the contact's residential location in the ISO 3166-1 alpha-2 format.
+        latitude:
+          type: number
+          example: 37.7749
+          description: The latitude of the contact's residential location.
+        longitude:
+          type: number
+          example: -122.4194
+          description: The longitude of the contact's residential location.
+        employmentTitle:
+          type: string
+          example: Chief Technology Officer
+          description: The current job title of the contact.
+        employmentSeniority:
+          type: string
+          example: c_suite
+          description: The seniority level of the contact in their current job.
+          enum:
+            - c_suite
+            - director
+            - entry
+            - founder
+            - head
+            - intern
+            - manager
+            - owner
+            - partner
+            - senior
+            - vp
+        companyId:
+          type: string
+          example: com_qxwVhUwAj3ijxWXstmCNvIII
+          description: The unique ID of the company the contact works at, starting with `com_`.
+        rootContactId:
+          type: string
+          example: rcn_qxwVhUwAj3ijxWXstmCNvIII
+          description: The globally unique ID of the root contact, starting with `rcn_`.
+    CampaignContact:
+      type: object
+      properties:
+        id:
+          type: string
+          example: con_qxwVhUwAj3ijxWXstmCNvIII
+          description: The unique ID of the cpmtact, starting with `con_`.
+        createdAt:
+          type: string
+          format: date-time
+          example: 2022-29-12T00:00:00.000Z
+          description: The date and time the contact was created.
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2022-29-12T00:00:00.000Z
+          description: The date and time the contact was last updated.
+        status:
+          type: string
+          enum:
+            - OPEN
+            - WON
+            - LOST
+          example: OPEN
+          description: The status of the campaign contact.
+        data:
+          type: object
+          description: The data associated with the campaign contact added when using an integration.
+        campaignId:
+          type: string
+          example: cpg_qxwVhUwAj3ijxWXstmCNvIII
+          description: The unique ID of the campaign the campaign contact is associated with, starting with `cpg_`.
+        contactId:
+          type: string
+          example: con_qxwVhUwAj3ijxWXstmCNvIII
+          description: The unique ID of the contact the campaign contact is associated with, starting with `con_`.
+        campaign:
+          $ref: "#/components/schemas/Campaign"
+    Campaign:
+      type: object
+      properties:
+        id:
+          type: string
+          example: con_qxwVhUwAj3ijxWXstmCNvIII
+          description: The unique ID of the cpmtact, starting with `con_`.
+        createdAt:
+          type: string
+          format: date-time
+          example: 2022-29-12T00:00:00.000Z
+          description: The date and time the contact was created.
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2022-29-12T00:00:00.000Z
+          description: The date and time the contact was last updated.
+        status:
+          type: string
+          enum:
+            - DRAFT
+            - RUNNING
+            - PAUSED
+            - ARCHIVED
+            - EXHAUSTING
+            - EXHAUSTED
+          example: RUNNING
+          description: The status of the campaign.
+        name:
+          type: string
+          example: My Campaign
+          description: The name of the campaign.
+        goal:
+          type: string
+          enum:
+            - SCHEDULE_MEETING
+            - CUSTOM_API_GOAL
+            - CLICK_LINK
+            - REPLY
+          example: SCHEDULE_MEETING
+          description: The goal of the campaign.
+        goalUrl:
+          type: string
+          example: https://firstquadrant.ai/schedule-meeting
+          description: The URL associated with the goal of the campaign.
+        offeringName:
+          type: string
+          example: FirstQuadrant
+          description: The name of the offering associated with the campaign.
+        offeringDescription:
+          type: string
+          example: The best way to send emails.
+          description: The description of the offering associated with the campaign.
+    TeamOutboundSettings:
+      required:
+        - id
+        - createdAt
+        - updatedAt
+        - name
+        - slug
+      type: object
+      properties:
+        id:
+          type: string
+          example: tea_qxwVhUwAj3ijxWXstmCNvIII
+          description: The unique ID of the team, starting with `tea_`.
+        createdAt:
+          type: string
+          format: date-time
+          example: 2022-29-12T00:00:00.000Z
+          description: The date and time the team was created.
+        updatedAt:
+          type: string
+          format: date-time
+          example: 2022-29-12T00:00:00.000Z
+          description: The date and time the team was last updated.
         followUpStrategy:
           type: string
-          example: FIBONACCI
-          enum: [EXPONENTIAL, FIBONACCI, LINEAR]
-          description: The follow up strategy for the team.
+          enum:
+            - EXPONENTIAL
+            - FIBONACCI
+            - LINEAR
+          example: EXPONENTIAL
+          description: The strategy used to calculate the follow-up interval.
         followUpIntervalDays:
           type: integer
           example: 3
-          description: The minimum number of days to wait before following up.
+          description: The minimum number of days between follow-up emails.
         followUpMaxCount:
           type: integer
-          example: 6
-          description: The maximum number of follow ups to send.
+          example: 5
+          description: The maximum number of follow-up emails that can be sent.
+        domainRedirectUrl:
+          type: string
+          example: https://firstquadrant.ai
+          description: The website of the team where outbound domains should redirect to.
+        markAsLostDelayDays:
+          type: integer
+          example: 7
+          description: The number of days after the last email to mark a conversation as lost.
+        openTrackingEnabled:
+          type: boolean
+          example: true
+          description: Whether open tracking is enabled for all campaigns by default.
+        clickTrackingEnabled:
+          type: boolean
+          example: true
+          description: Whether click tracking is enabled for all campaigns by default.
+        autopilotCampaignStepsEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot for Sequences is enabled for all campaigns by default.
+        autopilotReplyErrorEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Error classifications for all campaigns by default.
+        autopilotReplyPositiveEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Positive classifications for all campaigns by default.
+        autopilotReplyNegativeEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Negative classifications for all campaigns by default.
+        autopilotReplyNeutralEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Neutral classifications for all campaigns by default.
+        autopilotReplyForwardedEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Forwarded classifications for all campaigns by default.
+        autopilotReplyMaybeLaterEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Maybe later classifications for all campaigns by default.
+        autopilotReplyOutOfOfficeEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Out-of-office classifications for all campaigns by default.
+        autopilotReplyAutomatedEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Automated classifications for all campaigns by default.
+        autopilotReplyInformationRequestedEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Information requested classifications for all campaigns by default.
+        dailySendTimes:
+          type: object
+          properties:
+            monday:
+              type: object
+              description: The daily send window for Monday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            tuesday:
+              type: object
+              description: The daily send window for Tuesday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            wednesday:
+              type: object
+              description: The daily send window for Wednesday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            thursday:
+              type: object
+              description: The daily send window for Thursday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            friday:
+              type: object
+              description: The daily send window for Friday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            saturday:
+              type: object
+              description: The daily send window for Saturday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            sunday:
+              type: object
+              description: The daily send window for Sunday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+          description: The daily send window for each day of the week.
+        unsubscribeEnabled:
+          type: boolean
+          example: true
+          description: Whether the unsubscribe link is enabled for all campaigns by default.
+        unsubscribeText:
+          type: string
+          example: "If you don't want to hear from me, [let me know](#unsubscribe-link)."
+          description: The text of the unsubscribe link.
+        forwardEmailsInbound:
+          type: array
+          items:
+            type: string
+          example: ["enquiry@firstquadrant.ai"]
+          description: The email addresses to forward inbound emails to.
+        forwardEmailsOutbound:
+          type: array
+          items:
+            type: string
+          example: ["enquiry@firstquadrant.ai"]
+          description: The email addresses to add as BCC recipients to outbound emails.
+        forwardReplyErrorEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Error to the team member associated with the conversation.
+        forwardReplyPositiveEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Positive to the team member associated with the conversation.
+        forwardReplyNegativeEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Negative to the team member associated with the conversation.
+        forwardReplyNeutralEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Neutral to the team member associated with the conversation.
+        forwardReplyForwardedEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Forwarded to the team member associated with the conversation.
+        forwardReplyMaybeLaterEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Maybe later to the team member associated with the conversation.
+        forwardReplyOutOfOfficeEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Out-of-office to the team member associated with the conversation.
+        forwardReplyAutomatedEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Automated to the team member associated with the conversation.
+        forwardReplyInformationRequestedEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Information requested to the team member associated with the conversation.
+        aggressiveness:
+          type: integer
+          example: 3
+          description: How aggressive the team is in sending follow-up emails.
+          minimum: 1
+          maximum: 5
+    UpdateContactBody:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Anand Chowdhary
+          description: The full name of the contact.
+        nickname:
+          type: string
+          example: Anand
+          description: The nickname of the contact, e.g., the first name.
+        bio:
+          type: string
+          example: Founder, CTO, CPO of FirstQuadrant. GitHub Star, Forbes 30 Under 30, Y Combinator.
+          description: The bio of the contact.
+        avatar:
+          type: string
+          example: https://firstquadrant.ai/avatar.jpg
+          description: The URL of the avatar of the contact.
+        website:
+          type: string
+          example: https://firstquadrant.ai
+          description: The URL of the personal website of the contact.
+        location:
+          type: string
+          example: San Francisco, CA, USA
+          description: The residential location of the contact.
+        timeZone:
+          type: string
+          example: America/Los_Angeles
+          description: The time zone of the contact in the IANA time zone database format.
+        city:
+          type: string
+          example: San Francisco
+          description: The city of the contact's residential location.
+        state:
+          type: string
+          example: California
+          description: The state of the contact's residential location.
+        countryCode:
+          type: string
+          example: US
+          description: The country code of the contact's residential location in the ISO 3166-1 alpha-2 format.
+        latitude:
+          type: number
+          example: 37.7749
+          description: The latitude of the contact's residential location.
+        longitude:
+          type: number
+          example: -122.4194
+          description: The longitude of the contact's residential location.
+        employmentTitle:
+          type: string
+          example: Chief Technology Officer
+          description: The current job title of the contact.
+        employmentSeniority:
+          type: string
+          example: c_suite
+          description: The seniority level of the contact in their current job.
+          enum:
+            - c_suite
+            - director
+            - entry
+            - founder
+            - head
+            - intern
+            - manager
+            - owner
+            - partner
+            - senior
+            - vp
     UpdateTeamBody:
       type: object
       properties:
@@ -209,37 +950,254 @@ components:
           type: string
           example: My Team
           description: The name of the team.
-        timeZone:
+        slug:
           type: string
-          example: America/Los_Angeles
-          description: The default timezone of the team.
+          example: my-team
+          description: The unique slug of the team used is URLs in the FirstQuadrant app, e.g., `https://firstquadrant.ai/my-team`. If you change the slug, the team's URL will change.
+    UpdateTeamOutboundSettingsBody:
+      type: object
+      properties:
         followUpStrategy:
           type: string
-          example: FIBONACCI
-          enum: [EXPONENTIAL, FIBONACCI, LINEAR]
-          description: The follow up strategy for the team.
+          enum:
+            - EXPONENTIAL
+            - FIBONACCI
+            - LINEAR
+          example: EXPONENTIAL
+          description: The strategy used to calculate the follow-up interval.
         followUpIntervalDays:
           type: integer
           example: 3
-          description: The minimum number of days to wait before following up.
+          description: The minimum number of days between follow-up emails.
         followUpMaxCount:
           type: integer
-          example: 6
-          description: The maximum number of follow ups to send.
+          example: 5
+          description: The maximum number of follow-up emails that can be sent.
+        domainRedirectUrl:
+          type: string
+          example: https://firstquadrant.ai
+          description: The website of the team where outbound domains should redirect to.
+        markAsLostDelayDays:
+          type: integer
+          example: 7
+          description: The number of days after the last email to mark a conversation as lost.
+        openTrackingEnabled:
+          type: boolean
+          example: true
+          description: Whether open tracking is enabled for all campaigns by default.
+        clickTrackingEnabled:
+          type: boolean
+          example: true
+          description: Whether click tracking is enabled for all campaigns by default.
+        autopilotCampaignStepsEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot for Sequences is enabled for all campaigns by default.
+        autopilotReplyErrorEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Error classifications for all campaigns by default.
+        autopilotReplyPositiveEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Positive classifications for all campaigns by default.
+        autopilotReplyNegativeEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Negative classifications for all campaigns by default.
+        autopilotReplyNeutralEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Neutral classifications for all campaigns by default.
+        autopilotReplyForwardedEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Forwarded classifications for all campaigns by default.
+        autopilotReplyMaybeLaterEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Maybe later classifications for all campaigns by default.
+        autopilotReplyOutOfOfficeEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Out-of-office classifications for all campaigns by default.
+        autopilotReplyAutomatedEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Automated classifications for all campaigns by default.
+        autopilotReplyInformationRequestedEnabled:
+          type: boolean
+          example: true
+          description: Whether Autopilot is enabled for Information requested classifications for all campaigns by default.
+        dailySendTimes:
+          type: object
+          properties:
+            monday:
+              type: object
+              description: The daily send window for Monday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            tuesday:
+              type: object
+              description: The daily send window for Tuesday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            wednesday:
+              type: object
+              description: The daily send window for Wednesday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            thursday:
+              type: object
+              description: The daily send window for Thursday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            friday:
+              type: object
+              description: The daily send window for Friday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            saturday:
+              type: object
+              description: The daily send window for Saturday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+            sunday:
+              type: object
+              description: The daily send window for Sunday.
+              properties:
+                start:
+                  type: string
+                  example: 09:00
+                  description: The starting time of the daily send window.
+                end:
+                  type: string
+                  example: 17:00
+                  description: The ending time of the daily send window.
+          description: The daily send window for each day of the week.
+        unsubscribeEnabled:
+          type: boolean
+          example: true
+          description: Whether the unsubscribe link is enabled for all campaigns by default.
+        unsubscribeText:
+          type: string
+          example: "If you don't want to hear from me, [let me know](#unsubscribe-link)."
+          description: The text of the unsubscribe link.
+        forwardEmailsInbound:
+          type: array
+          items:
+            type: string
+          example: ["enquiry@firstquadrant.ai"]
+          description: The email addresses to forward inbound emails to.
+        forwardEmailsOutbound:
+          type: array
+          items:
+            type: string
+          example: ["enquiry@firstquadrant.ai"]
+          description: The email addresses to add as BCC recipients to outbound emails.
+        forwardReplyErrorEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Error to the team member associated with the conversation.
+        forwardReplyPositiveEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Positive to the team member associated with the conversation.
+        forwardReplyNegativeEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Negative to the team member associated with the conversation.
+        forwardReplyNeutralEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Neutral to the team member associated with the conversation.
+        forwardReplyForwardedEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Forwarded to the team member associated with the conversation.
+        forwardReplyMaybeLaterEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Maybe later to the team member associated with the conversation.
+        forwardReplyOutOfOfficeEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Out-of-office to the team member associated with the conversation.
+        forwardReplyAutomatedEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Automated to the team member associated with the conversation.
+        forwardReplyInformationRequestedEnabled:
+          type: boolean
+          example: true
+          description: Whether to forward replies classified as Information requested to the team member associated with the conversation.
+        aggressiveness:
+          type: integer
+          example: 3
+          description: How aggressive the team is in sending follow-up emails.
+          minimum: 1
+          maximum: 5
   requestBodies:
-    MarkConversationAsWonBody:
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/MarkConversationAsWonBody"
     UpdateTeamBody:
       content:
         application/json:
           schema:
             $ref: "#/components/schemas/UpdateTeamBody"
+    UpdateTeamOutboundSettingsBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UpdateTeamOutboundSettingsBody"
   securitySchemes:
     api_key:
       type: apiKey
       in: header
-      name: Authorization
-      description: You can generate an API key by logging in to your FirstQuadrant account and navigating to Settings -> Apps and enabling "FirstQuadrant API". The API key should begin with "fqa_".
+      name: Bearer API key
+      description: The API key used to authenticate requests, learn how to generate an API key on the [Authentication](https://docs.firstquadrant.ai/api-reference/authentication) page.
+    sudo:
+      type: apiKey
+      in: header
+      name: Superuser access
+      description: This header is used to authenticate as a superuser. Your API key must have the `sudo` scope to use this header.
