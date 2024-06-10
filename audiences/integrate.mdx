@@ -31,17 +31,17 @@ The descriptions of these properties are the same as the properties in the [Impo
 
 #### Authentication
 
-You need to include the API key in the `Campaign-API-Key` header. If you are unable to send custom headers, you can also include the API key in the request body as `apiKey` or as a query parameter `campaign-api-key`.
+You need to include the API key in the `Campaign-API-Key` header. If you are unable to send custom headers, you can also include the API key as a query parameter `campaign-api-key`.
 
 #### Examples
 
-In the following examples, you can replace `CAMPAIGN_API_KEY` with the API key of your campaign. In these examples, we're sending a contact with the name "John Doe" and email john@example.com to FirstQuadrant. They have written a custom message "I want to contact sales." which is stored in the `data.message` property.
+In the following examples, you can replace `fqa_pub_example` with the API key of your campaign. In these examples, we're sending a contact with the name "John Doe" and email john@example.com to FirstQuadrant. They have written a custom message "I want to contact sales." which is stored in the `data.message` property.
 
 You can use the following HTML form to send contacts to FirstQuadrant. Since HTML forms do not support nested objects, you can use dot notation to specify nested properties. For example, `contact.name` will be parsed as `contact: { name: "John Doe" }` when the header `Content-Type: application/x-www-form-urlencoded` is set.
 
 ```html
 <form
-  action="https://firstquadrant.ai/api/go/audience?campaign-api-key=CAMPAIGN_API_KEY"
+  action="https://firstquadrant.ai/api/go/audience?campaign-api-key=fqa_pub_example"
   method="post"
 >
   <label>Name <input name="contact.name" /></label>
@@ -56,7 +56,7 @@ You can use the following cURL command to send contacts to FirstQuadrant:
 ```bash
 curl \
   -X POST \
-  -H "Campaign-API-Key: CAMPAIGN_API_KEY" \
+  -H "Campaign-API-Key: fqa_pub_example" \
   -H "Content-type: application/json" \
   -d '{
     "contact": {
@@ -75,7 +75,7 @@ You can use the following JavaScript code to send contacts to FirstQuadrant:
 await fetch("https://firstquadrant.ai/api/go/audience", {
   method: "POST",
   headers: {
-    "Campaign-API-Key": "CAMPAIGN_API_KEY",
+    "Campaign-API-Key": "fqa_pub_example",
     "Content-Type": "application/json",
   },
   body: JSON.stringify({
