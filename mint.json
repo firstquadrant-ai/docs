@@ -82,6 +82,13 @@
         "api-reference/contacts/contactId/unblock",
         "api-reference/contacts/contactId/get-campaign-contacts"
       ]
+    },
+    {
+      "group": "Campaigns",
+      "pages": [
+        "api-reference/campaigns/get",
+        "api-reference/campaigns/post-goal"
+      ]
     }
   ],
   "footerSocials": {

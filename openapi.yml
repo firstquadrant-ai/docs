@@ -170,6 +170,67 @@ paths:
       security:
         - api_key:
             - read:team
+  /api/teams/{teamId}/campaigns:
+    get:
+      tags:
+        - teams
+      description: Get all campaigns for a team.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+        - $ref: "#/components/parameters/take"
+        - $ref: "#/components/parameters/startingAfter"
+        - $ref: "#/components/parameters/q"
+        - $ref: "#/components/parameters/orderBy"
+        - $ref: "#/components/parameters/sort"
+      responses:
+        "200":
+          description: Array of campaigns
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Campaign"
+      security:
+        - api_key:
+            - read:team
+  /api/teams/{teamId}/campaigns/goal:
+    post:
+      tags:
+        - teams
+      description: Mark campaign contacts as won.
+      parameters:
+        - in: path
+          name: teamId
+          schema:
+            type: string
+          required: true
+          description: Team ID, starting with `tea_`
+          example: tea_2MSb8jd6VDptcAcVJuPcJhte3Yc
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CampaignContactGoalBody"
+        required: true
+      responses:
+        "200":
+          description: Campaign contact
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CampaignContact"
+      security:
+        - api_key:
+            - read:team
   /api/teams/{teamId}/contacts/{contactId}:
     get:
       tags:
@@ -444,7 +505,7 @@ components:
         id:
           type: string
           example: con_qxwVhUwAj3ijxWXstmCNvIII
-          description: The unique ID of the cpmtact, starting with `con_`.
+          description: The unique ID of the contact, starting with `con_`.
         createdAt:
           type: string
           format: date-time
@@ -541,18 +602,18 @@ components:
       properties:
         id:
           type: string
-          example: con_qxwVhUwAj3ijxWXstmCNvIII
-          description: The unique ID of the cpmtact, starting with `con_`.
+          example: cpc_qxwVhUwAj3ijxWXstmCNvIII
+          description: The unique ID of this contact in a campaign, starting with `cpc_`.
         createdAt:
           type: string
           format: date-time
           example: 2022-29-12T00:00:00.000Z
-          description: The date and time the contact was created.
+          description: The date and time the contact was added to this campaign.
         updatedAt:
           type: string
           format: date-time
           example: 2022-29-12T00:00:00.000Z
-          description: The date and time the contact was last updated.
+          description: The date and time the contact was last updated in this campaign.
         status:
           type: string
           enum:
@@ -580,7 +641,7 @@ components:
         id:
           type: string
           example: con_qxwVhUwAj3ijxWXstmCNvIII
-          description: The unique ID of the cpmtact, starting with `con_`.
+          description: The unique ID of the contact, starting with `con_`.
         createdAt:
           type: string
           format: date-time
@@ -954,6 +1015,44 @@ components:
           type: string
           example: my-team
           description: The unique slug of the team used is URLs in the FirstQuadrant app, e.g., `https://firstquadrant.ai/my-team`. If you change the slug, the team's URL will change.
+    CampaignContactGoalBody:
+      type: object
+      properties:
+        goal:
+          type: string
+          enum:
+            - SCHEDULE_MEETING
+            - CUSTOM_API_GOAL
+            - CLICK_LINK
+            - REPLY
+          example: SCHEDULE_MEETING
+          description: The goal of the campaign that was completed.
+        email:
+          type: string
+          example: john@example.com
+          description: The email address of the contact.
+        contactId:
+          type: string
+          example: con_qxwVhUwAj3ijxWXstmCNvIII
+          description: The unique ID of the contact, starting with `con_`.
+        campaignContactId:
+          type: string
+          example: cpc_qxwVhUwAj3ijxWXstmCNvIII
+          description: The unique ID of the campaign contact, starting with `cpc_`.
+        data:
+          type: object
+          description: The data associated with the campaign contact added when using an integration.
+          properties:
+            path:
+              type: array
+              items:
+                type: string
+              example: ["id"]
+              description: The path to the key in the data object.
+            equals:
+              type: string
+              example: "value"
+              description: The value to compare the key with.
     UpdateTeamOutboundSettingsBody:
       type: object
       properties:
@@ -1185,6 +1284,11 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/UpdateTeamBody"
+    CampaignContactGoalBody:
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CampaignContactGoalBody"
     UpdateTeamOutboundSettingsBody:
       content:
         application/json:
