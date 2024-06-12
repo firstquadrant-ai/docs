@@ -5,4 +5,6 @@ openapi: POST /api/teams/{teamId}/campaigns/goal
 
 This endpoint is used to mark a campaign contact as "won" using the API.
 
-You are required to provide the goal, for example "meeting scheduled", and we will find the contact in the most recent campaign with that goal and mark them as "won". You also need to provide a way to find the contact, for example by email, ID, or nested custom data (any one of the fields is required).
+You are required to provide a way to find the contact, for example by email, ID, or nested custom data. At least property is required to identify the contact.
+
+You can also choose to provide the goal, for example "meeting scheduled", and we will find the contact in the most recent campaign with that goal and mark them as "won". If you don't provide a goal, we will select the contact in the most recent campaign.
