@@ -45,6 +45,10 @@
       ]
     },
     {
+      "group": "Campaigns",
+      "pages": ["campaigns/enrichment", "campaigns/context"]
+    },
+    {
       "group": "Mailboxes",
       "pages": [
         "mailboxes/connect",
