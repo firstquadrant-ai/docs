@@ -3,15 +3,69 @@ title: Onboarding
 description: How to get started with FirstQuadrant
 ---
 
-## Deliverability
+## Setting up for outbound
 
-**Purchase at least 2 `.com` domains that will be used exclusively for your outbound campaigns.** Since we don't want to use your primary domain for outbound; if you have any dormant domains, we can also use those as well. We prefer `.com` domains for outbound if you are buying fresh ones, but other TLDs like `.co` and `.io` work too if you already own them. This is because `.com` domains have the highest sender reputation, but a domain with a history and good reputation is also a good choice.
+If you want to use FirstQuadrant for outbound campaigns, you'll need to set up a few things first.
 
-**Set up 6 mailboxes through an email provider which we can use for sending out our outbound campaigns.** The names used for these mailboxes should correspond with the name of the person that's sending out the emails. Many of our customers use [Google Workspace](https://workspace.google.com) to set up the domains and mailboxes; they have the highest sender reputation. Alternatively, we can also recommend [Mailforge](https://mailforge.ai), where you can purchase both domains and mailboxes in one place. Mailforge is a lot cheaper and easier to set up, so we suggest getting started with Mailforge and switching over to Google Workspace in case too many emails end up in spam.
+### Purchasing domains
 
-**After you've set up the mailboxes, we also recommend setting up email warming.** We recommend using a provider like [MailReach](https://www.mailreach.co) or [Instantly](https://instantly.ai) which can connect to the mailboxes you created. Learn more about deliverability on our free [email deliverability guide](https://deliverabilityguide.com).
+We recommend that you **purchase at least 2 `.com` domains that will be used exclusively for your outbound campaigns** since we don't want to use your primary domain for outbound. This is because if your primary domain is flagged as spam, it will affect your entire business, and you will have to spend a lot of time and effort to get it unflagged; but if you use a separate domain for outbound, you can simply stop using it and switch to a new domain.
 
-## Campaign
+We prefer `.com` domains for outbound if you are buying fresh ones, but other TLDs like `.co` and `.io` work too if you already own them. This is because `.com` domains have the highest sender reputation, but a domain with a history and good reputation can also be a good choice.
+
+For example, if your primary domain is `example.com`, you can purchase `examplehq.com` and `getexample.com` as additional domains, or more specific to your line of business, for example the explainer video agency Cleverclip may purchase `cleverclipvideos.com`.
+
+### Setting up mailboxes
+
+#### Selecting a provider
+
+To create mailboxes from the domains you purchased, you can use any email service provider (ESP). Most of our customers use [Google Workspace](https://workspace.google.com). We recommend using Google or [Microsoft 365](https://www.microsoft.com/en-us/microsoft-365/business) for Business as they have the highest sender reputation.
+
+There are also third-party resellers who set up Google Workspace mailboxes on your behalf, so you don't have to go through the process of setting up the mailboxes yourself, such as [Zapmail](https://www.zapmail.ai). This can also be more affordable than purchasing Google directly.
+
+There are also cold email-specific providers like [MailScale](https://www.mailscale.ai), [Maildoso](https://getmaildoso.com), and [Infraforge](https://www.infraforge.ai) that you may wish to use because they are significantly more affordable than Google or Microsoft. However, we find that Google and Microsoft still have the highest deliverability rates, so we recommend using them as the first choice.
+
+Depending on which provider you select, you will have to set up DNS records to start sending and receiving emails from your new mailboxes. Some providers will guide you through this process, while others will set it up for you automatically. You can also purchase a domain through Google or Microsoft directly, or you can purchase it through a domain registrar like [Namecheap](https://www.namecheap.com) or [GoDaddy](https://www.godaddy.com) and then connect it to Google or Microsoft.
+
+Here are some guides on how to set up the required DNS records for Google Workspace:
+
+- [Activate Gmail for Google Workspace](https://support.google.com/a/answer/140034?hl=en)
+- [Help prevent spoofing and spam with SPF](https://support.google.com/a/answer/33786?hl=en)
+- [Help prevent spoofing and spam with DKIM](https://support.google.com/a/answer/174124?hl=en)
+- [Add your DMARC record](https://support.google.com/a/answer/2466563?hl=en)
+
+#### Creating mailboxes
+
+To start your first outbound campaigns, we recommend **setting up 6 mailboxes through an email provider which we can use for sending out our outbound campaigns.** The names used for these mailboxes should correspond with the name of the person that's sending out the emails. For example, if you're sending out emails as Carlo Badini at Example Inc., your 6 mailboxes can be:
+
+- `carlo@examplehq.com`
+- `carlo.badini@examplehq.com`
+- `cbadini@examplehq.com`
+- `carlo@getexample.com`
+- `carlo.badini@getexample.com`
+- `cbadini@getexample.com`
+
+When you connect your mailboxes to FirstQuadrant, you can select how many emails you want to send per day from each mailbox. We also set up smart ramping up, so we'll start with a low volume and gradually increase it to ensure the best deliverability. By default, we suggest 30 emails per mailbox per day. To approximate the number of mailboxes you need, you can use the following:
+
+- Say you have 1 outbound campaign that wants to reach out to 25 new prospects per day
+- 1 first-contact email + 3 follow-ups over a few weeks = 4 emails per prospect per sequence
+- 25 prospects \* 4 emails per prospect = volume of 100 emails per day
+- 100 emails per day / 30 emails per mailbox = 3 to 4 active mailboxes
+- 3 to 4 active mailboxes + 2 to 3 backup mailboxes = **6 mailboxes**
+
+After you have set up your 6 mailboxes, you can connect them to FirstQuadrant during the onboarding call.
+
+#### Starting email warming
+
+**After you've set up the mailboxes, we also recommend setting up email warming.** Email warming is the process of gradually increasing the number of emails you send and receive from a new mailbox to establish a good sender reputation with mailbox providers. This is done by sending a small number of emails at first, and then gradually increasing the number of emails sent over time, and having a percent of those emails replied to. This makes the mailbox provider believe that the emails sent are worth replying to, and are therefore not likely spam.
+
+Regardless of whether you have a completely fresh mailbox or one that’s already been used in the past, it is of paramount importance that you always continue to warm up your mailboxes.
+
+You can select your email warming provider of choice, such as [MailReach](https://www.mailreach.co) or [Warmup Inbox](https://www.warmupinbox.com), which are the market leaders in email warming but you have to pay per mailbox. You can also use [Instantly](https://instantly.ai) or [Smartlead.ai](https://www.smartlead.ai) which allow you to warm all your mailboxes for a flat monthly fee.
+
+You can learn more about deliverability on our free [email deliverability guide](https://deliverabilityguide.com).
+
+## Preparing your first campaign
 
 **Write a summary of what your company/product is offering.** The summary serves as contextual knowledge for our AI model and should be anywhere from 500 to 1000 characters long. This content is not directly used in the emails, but it helps the AI to understand the context of your product and company, and to generate more relevant emails.
 
