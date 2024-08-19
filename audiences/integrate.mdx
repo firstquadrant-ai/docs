@@ -87,3 +87,48 @@ await fetch("https://firstquadrant.ai/api/go/audience", {
   }),
 });
 ```
+
+## Transformers
+
+Transformers allow you to modify the data using JavaScript before it is processed by FirstQuadrant. For example, you can use a transformer to normalize the data, remove sensitive information, or add additional data. Transformers are currently in feature preview; you can enable it from Settings -> Feature preview.
+
+To create a transformer, you can write JavaScript code that is executed as the function body. The function accepts the argument `json` which is the data sent to the API endpoint and should return an object containing `contact`, `company`, and `data` properties.
+
+The following is an example of a transformer that adds a custom `source` property to the contact:
+
+```js
+const { contact, company, data } = json;
+return { contact, company, data: { ...data, source: "website" } };
+```
+
+There are also several utilities available in the transformer:
+
+| Utility                        | Description                                                    |
+| ------------------------------ | -------------------------------------------------------------- |
+| `z`                            | [colinhacks/zod](https://github.com/colinhacks/zod)            |
+| `slugify`                      | [sindresorhus/slugify](http://github.com/sindresorhus/slugify) |
+| `dot`                          | [rhalff/dot-object](https://github.com/rhalff/dot-object)      |
+| `luxon`                        | [moment/luxon](https://github.com/moment/luxon)                |
+| `normalizeEmail`               | Normalize an email address                                     |
+| `normalizeDomain`              | Normalize a domain name                                        |
+| `getNormalizedDomainFromEmail` | Get the normalized domain from an email address                |
+
+The following is an example of a transformer that normalizes the email address and combines the first name and last name into a single `contact.name` property:
+
+```js
+const result = z
+  .object({
+    "Contact first name": z.string(),
+    "Contact last name": z.string().nullish(),
+    email: z.string().email(),
+  })
+  .parse(json);
+return {
+  contact: {
+    name: `${result["Contact first name"]} ${
+      result["Contact last name"] ?? ""
+    }`.trim(),
+    email: normalizeEmail(result.email),
+  },
+};
+```
