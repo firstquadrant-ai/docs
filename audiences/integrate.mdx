@@ -112,6 +112,7 @@ There are also several utilities available in the transformer:
 | `normalizeEmail`               | Normalize an email address                                     |
 | `normalizeDomain`              | Normalize a domain name                                        |
 | `getNormalizedDomainFromEmail` | Get the normalized domain from an email address                |
+| `skip`                         | Skip processing this row                                       |
 
 The following is an example of a transformer that normalizes the email address and combines the first name and last name into a single `contact.name` property:
 
@@ -131,4 +132,10 @@ return {
     email: normalizeEmail(result.email),
   },
 };
+```
+
+If, for any reason, you don't want FirstQuadrant to process the data, you can use the `skip` utility. This can be helpful to filter out rows for processing (for example, to only include a certain event from incoming webhooks from external services like Stripe or Segment):
+
+```js
+if (someCondition) return skip("Optionally add a reason for skipping this row");
 ```
